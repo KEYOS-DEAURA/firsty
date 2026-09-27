@@ -1,0 +1,56 @@
+#include <Servo.h>
+
+Servo fngr; //finger
+Servo arm; //arm
+Servo base; //base
+const int ir=4;
+
+void setup() {
+  // put your setup code here, to run once:
+pinMode(ir, INPUT);
+fngr.attach(6);
+arm.attach(8);
+base.attach(10);
+Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+int b=digitalRead(ir);
+int fngrang=fngr.read();
+int armang=arm.read();
+if (b==0){
+  if (fngrang==93){
+    Serial.println("Object detected");
+    delay(1000);
+    fngr.write(0);
+    delay(1000);
+    base.write(0);
+    delay(1000);
+    arm.write(110);
+    delay(1000);
+    Serial.println("Seeking for a holder..");
+
+  }else if (fngrang==0){
+    Serial.println("Holder detected");
+  delay(1000);
+  funk();
+  Serial.println("Ready for another turn!");
+  Serial.println("");
+}
+
+}else if (b==1){
+  if (armang<180&&armang>=110){      
+  arm.write(armang+15); //goes for a holder 15 by 15
+  delay(15);}
+  else if(Serial.available()){
+    funk();
+  }
+}
+}
+int funk(){
+  fngr.write(93);
+  delay(1000);
+  arm.write(93); 
+  delay(1000);
+  base.write(93);}
